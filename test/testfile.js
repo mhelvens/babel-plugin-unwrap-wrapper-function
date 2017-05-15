@@ -13,6 +13,9 @@ const $$allowInvokingConstructor = Symbol('$$allowInvokingConstructor');
  * @wrapper
  */
 export default (env) => {
+	
+	const bla = 'bla';
+	
 	/**
 	 * The base-class of all entities described in the manifest.
 	 * @public

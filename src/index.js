@@ -26,10 +26,11 @@ export default ({types: t}) => {
 	    visitor: {
 	        ['ArrowFunctionExpression|FunctionExpression|FunctionDeclaration'](path) {
 	        	if (!shouldBeUnwrapped(path)) { return }
-	        	const statementParent = path.getStatementParent();
 	        	for (let sPath of [...path.get('body.body')].reverse()) {
-	        		if (!sPath.isDeclaration()) { continue }
+	        		if (!sPath.isDeclaration())      { continue }
+	        		if (!sPath.node.leadingComments) { continue }
 			        path::moveDeclaration(sPath);
+	        		break;
 		        }
 	        	path.remove();
 	        }
