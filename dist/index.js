@@ -43,7 +43,6 @@ exports.default = function (_ref) {
 			if (!shouldBeUnwrapped(path)) {
 				return;
 			}
-			var statementParent = path.getStatementParent();
 			_reverse = [].concat(_toConsumableArray(path.get('body.body'))).reverse();
 
 			if (!(_reverse && (typeof _reverse[Symbol.iterator] === 'function' || Array.isArray(_reverse)))) {
@@ -63,7 +62,11 @@ exports.default = function (_ref) {
 					if (!sPath.isDeclaration()) {
 						continue;
 					}
+					if (!sPath.node.leadingComments) {
+						continue;
+					}
 					moveDeclaration.call(path, sPath);
+					break;
 				}
 			} catch (err) {
 				_didIteratorError = true;
