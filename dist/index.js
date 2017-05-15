@@ -15,10 +15,27 @@ exports.default = function (_ref) {
 
 
 	function shouldBeUnwrapped(path) {
-		var comments = path.getStatementParent().node.leadingComments;
+		var node = path.getStatementParent().node;
+		var comments = node.leadingComments;
 		return comments && comments.some(function (comment) {
 			return comment.type === 'CommentBlock' && /^\*[^@]*@wrapper.*/.test(comment.value);
 		});
+	}
+
+	function moveDeclaration(path) {
+		var pStatement = this.getStatementParent();
+		var node = void 0;
+		switch (pStatement.type) {
+			case 'ExportDefaultDeclaration':
+				{
+					node = t.exportDefaultDeclaration(path.node);
+				}break;
+			default:
+				throw new Error("The unwrap-wrapper-function plugin can only handle wrapper functions following `export default`.");
+		}
+		node.leadingComments = path.node.leadingComments;
+		pStatement.insertAfter(node);
+		path.remove();
 	}
 
 	return {
@@ -46,8 +63,7 @@ exports.default = function (_ref) {
 					if (!sPath.isDeclaration()) {
 						continue;
 					}
-					statementParent.insertAfter(sPath.node);
-					sPath.remove();
+					moveDeclaration.call(path, sPath);
 				}
 			} catch (err) {
 				_didIteratorError = true;
