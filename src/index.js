@@ -12,12 +12,12 @@ export default ({types: t}) => {
 	        ['ArrowFunctionExpression|FunctionExpression|FunctionDeclaration'](path) {
 	        	if (!shouldBeUnwrapped(path)) { return }
 	        	const statementParent = path.getStatementParent();
-	        	for (let sPath of path.get('body.body')) {
+	        	for (let sPath of [...path.get('body.body')].reverse()) {
 	        		if (!sPath.isDeclaration()) { continue }
-			        statementParent.insertBefore(sPath.node);
-	        		sPath.remove();
+			        statementParent.insertAfter(sPath.node);
+			        sPath.remove();
 		        }
-	        	
+	        	path.remove();
 	        }
 	    }
 	};

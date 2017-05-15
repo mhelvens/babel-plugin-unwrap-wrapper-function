@@ -8,6 +8,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 exports.default = function (_ref) {
 	var t = _ref.types;
 
@@ -25,10 +27,10 @@ exports.default = function (_ref) {
 				return;
 			}
 			var statementParent = path.getStatementParent();
-			_path$get = path.get('body.body');
+			_reverse = [].concat(_toConsumableArray(path.get('body.body'))).reverse();
 
-			if (!(_path$get && (typeof _path$get[Symbol.iterator] === 'function' || Array.isArray(_path$get)))) {
-				throw new TypeError('Expected _path$get to be iterable, got ' + _inspect(_path$get));
+			if (!(_reverse && (typeof _reverse[Symbol.iterator] === 'function' || Array.isArray(_reverse)))) {
+				throw new TypeError('Expected _reverse to be iterable, got ' + _inspect(_reverse));
 			}
 
 			var _iteratorNormalCompletion = true;
@@ -36,15 +38,15 @@ exports.default = function (_ref) {
 			var _iteratorError = undefined;
 
 			try {
-				for (var _iterator = _path$get[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-					var _path$get;
+				for (var _iterator = _reverse[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+					var _reverse;
 
 					var sPath = _step.value;
 
 					if (!sPath.isDeclaration()) {
 						continue;
 					}
-					statementParent.insertBefore(sPath.node);
+					statementParent.insertAfter(sPath.node);
 					sPath.remove();
 				}
 			} catch (err) {
@@ -61,6 +63,8 @@ exports.default = function (_ref) {
 					}
 				}
 			}
+
+			path.remove();
 		})
 	};
 };
